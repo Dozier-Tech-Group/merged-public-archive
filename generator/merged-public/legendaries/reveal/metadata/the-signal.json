@@ -1,0 +1,23 @@
+{
+  "name": "Merged Public — The Signal",
+  "description": "A portrait dissolving into waveform. Vaulted — claimed only by assembling all ten fragments.",
+  "image": "ipfs://__REVEAL_CID__/the-signal.png",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Legendary",
+      "value": "The Signal"
+    },
+    {
+      "trait_type": "State",
+      "value": "Vaulted"
+    }
+  ]
+}

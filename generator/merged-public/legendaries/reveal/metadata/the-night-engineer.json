@@ -1,0 +1,19 @@
+{
+  "name": "Merged Public — The Night Engineer",
+  "description": "Lit only by instrument glow. The one who keeps the archive running through the 03:14 shift.",
+  "image": "ipfs://__REVEAL_CID__/the-night-engineer.png",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Legendary",
+      "value": "The Night Engineer"
+    }
+  ]
+}

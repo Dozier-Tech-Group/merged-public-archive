@@ -1,0 +1,32 @@
+[
+  {
+    "id": "R-01",
+    "rule": "Tall hair under headwear: Afro, Einstein Shock, Bun, and Long Straight clip under any headwear except Headphones and Laurel Wreath. Each of these four hair traits ships with a second hat-fit PNG the compositor swaps in automatically when headwear is present (4 extra asset files, not extra traits). Nothing is re-rolled.",
+    "reroll": "none"
+  },
+  {
+    "id": "R-02",
+    "rule": "Goggles vs. brimmed hats: Safety Goggles and Welding Goggles cannot pair with Wide-Brim Field Hat or Green Eyeshade; the straps and brims collide.",
+    "reroll": "eyewear"
+  },
+  {
+    "id": "R-03",
+    "rule": "Cybernetic redundancy: the Cybernetic Chassis base cannot receive Cybernetic Eye or Circuit Tattoo (already machine).",
+    "reroll": "special"
+  },
+  {
+    "id": "R-04",
+    "rule": "Casts stay analog: Bronze Cast and Marble Cast bases cannot receive Cybernetic Eye, Circuit Tattoo, or Static Glitch.",
+    "reroll": "special"
+  },
+  {
+    "id": "R-05",
+    "rule": "One crown only: Laurel Wreath excludes the Pencil Behind Ear accessory, which occupies the same ear anchor (Gold-Tassel Mortarboard is same-layer, impossible by construction).",
+    "reroll": "accessory"
+  },
+  {
+    "id": "R-06",
+    "rule": "Redacted stays severe: the Redacted background cannot pair with Grinning or Eureka expressions; tonal mismatch.",
+    "reroll": "expression"
+  }
+]

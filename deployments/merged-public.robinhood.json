@@ -1,0 +1,35 @@
+{
+  "network": "robinhood",
+  "chainId": 4663,
+  "status": "minted",
+  "address": "0x5D000b230653E416FF41451525b144a6C2Ad7178",
+  "deployer": "0x35b28a9d449FEdC150D455a7622a594ED7D33B66",
+  "unrevealedURI": "https://raw.githubusercontent.com/Dozier-Tech-Group/silicon-bayou/master/metadata/mp/unrevealed.json",
+  "provenanceHash": "0x9c123f7aa01c529a0bdba61bdd241b62e79a3452d294afae7d833e03d97bf952",
+  "provenanceFile": "generator/merged-public/provenance.json",
+  "deployTx": "0x3cbe8d29137318ca0495f417736823e9abeb68711bebf8c436e1f691afbb3a9e",
+  "explorer": "https://robinhoodchain.blockscout.com/address/0x5D000b230653E416FF41451525b144a6C2Ad7178",
+  "explorerDeployTx": "https://robinhoodchain.blockscout.com/tx/0x3cbe8d29137318ca0495f417736823e9abeb68711bebf8c436e1f691afbb3a9e",
+  "contractURI": "https://raw.githubusercontent.com/Dozier-Tech-Group/silicon-bayou/master/metadata/mp/collection.json",
+  "contractURITx": "0x36b713047db7a31f1d21a1adfccf711cc20d5e7e23dc8873f30b833bab3a4a90",
+  "treasury": "0xBCCAecdBb4F0c7af32C8018486D0b52A474d9B4a",
+  "royaltyTx": "0x3282fcee3555aeac6a6f66205cefe5d0d5548e18bd83f1d288ce5e7b6ae7da9f",
+  "mintedAt": "2026-08-19T04:06:48.259Z",
+  "ownershipTransferTx": "0x0e7fbd134d8ab768d1c82f8ffeb75e3de2a3afa490e1299cb1786d1ef7f1e9b1",
+  "owner": "0x29486Fc6B2E7184Dd4aF4d310D4f85F4262fD11d",
+  "ownershipAccepted": "2026-08-19 — operator accepted via Blockscout; verified on-chain owner()=operator, pendingOwner()=0x0",
+  "ipfs": {
+    "sealedImage": "ipfs://QmZ6ySadSJYnB3DWwMdFHHqjK5fqBf9ATc22AGCeST7qYt",
+    "unrevealed": "ipfs://QmV16oCLgVzCzsPSVUbnEr4C1ZHyeaAMFvLvLqPugm79JX",
+    "collection": "ipfs://QmWTWxzksnhgrDifsK8nBLmshkPrQvKqDBgJQpEJfBRUDU",
+    "pinnedAt": "2026-08-19T06:08:36.238Z",
+    "note": "These are raw file CIDs, asserted equal to locally computed CIDv0 at pin time.",
+    "chainRepointed": "2026-08-19 — operator signed setUnrevealedURI + setContractURI with the raw CIDs (first unrevealedURI attempt had a stray 'pipfs://' prefix, corrected same day); verified via readback: unrevealedURI, contractURI, tokenURI(1), tokenURI(10000) all exact.",
+    "supersededWrapperCIDs": {
+      "reason": "First pin run (2026-08-19T04:46Z) got directory-wrapped by Pinata; these CIDs serve folder listings, not the documents. Chain must be repointed to the raw CIDs above.",
+      "sealedImage": "ipfs://Qmcfky4x2r1L74BXcnakCEuHNmakqAKExUwBF4V8uHSV2s",
+      "unrevealed": "ipfs://QmRVfBB1CZXMZefiTKrQhRUpaKwe5P18X2mVLLo5x5rGR7",
+      "collection": "ipfs://Qmf8rhe9iQFN7u4TnDJ3E9E7QGWTW14bBSiFBpQts5YT4C"
+    }
+  }
+}

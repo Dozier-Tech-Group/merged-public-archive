@@ -1,0 +1,19 @@
+{
+  "name": "Merged Public — The Machinist",
+  "description": "Drawn in blueprint. Portrait Mk.I, record brass, tolerance ±0.01.",
+  "image": "ipfs://__REVEAL_CID__/the-machinist.png",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Legendary",
+      "value": "The Machinist"
+    }
+  ]
+}

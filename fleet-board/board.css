@@ -1,0 +1,326 @@
+/* ── Fleet Operations Board ─────────────────────────────────────────────
+   One deliberate visual world: a 1980s phosphor operations board.
+   Single-theme by design — every color is painted explicitly so the page
+   holds on any host ground, light or dark. */
+
+:root {
+  --ground:  #0a0e08;   /* near-black, green-biased           */
+  --panel:   #0e130d;   /* board face                          */
+  --rule:    #1e5a32;   /* dim phosphor rules and borders      */
+  --ink:     #33ff66;   /* phosphor green — the data           */
+  --ink-dim: #23a04a;   /* secondary green                     */
+  --amber:   #ffb000;   /* P3 amber — headers, emphasis        */
+  --alarm:   #ff4040;   /* failures only                       */
+  --paper:   #d9efdc;   /* long-form prose                     */
+  --display: 'VT323', 'Consolas', monospace;
+  --mono:    'IBM Plex Mono', 'Consolas', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.45;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* faint static scanlines — texture, not motion */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.16) 0px,
+    rgba(0, 0, 0, 0.16) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: 3;
+}
+
+a { color: var(--ink); text-decoration-color: var(--rule); }
+a:hover { color: var(--amber); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ── masthead ─────────────────────────────────────────────────────────── */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.5rem;
+  border-bottom: 2px solid var(--rule);
+}
+
+.brand {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+  letter-spacing: 0.04em;
+  color: var(--amber);
+  text-wrap: balance;
+}
+
+.brand-sep { color: var(--ink); }
+
+.feedstate {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+}
+
+.dot {
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  background: var(--ink-dim);
+  display: inline-block;
+}
+.dot.live  { background: var(--ink);   animation: pulse 2s infinite; }
+.dot.stale { background: var(--amber); }
+.dot.down  { background: var(--alarm); }
+
+@keyframes pulse { 50% { opacity: 0.35; } }
+
+.clock {
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+}
+
+/* ── chain line ───────────────────────────────────────────────────────── */
+
+.chainline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+  padding: 0.45rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-dim);
+}
+
+.chainline .num { color: var(--ink); font-variant-numeric: tabular-nums; }
+.srclink { color: var(--ink-dim); text-decoration: none; }
+.srclink:hover { color: var(--amber); }
+
+/* ── the wall ─────────────────────────────────────────────────────────── */
+
+.wall {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 2fr;
+  gap: 2px;
+  background: var(--rule);
+  border-bottom: 2px solid var(--rule);
+}
+
+.panel {
+  background: var(--panel);
+  padding: 1rem 1.25rem 1.25rem;
+  min-width: 0; /* let tables scroll inside, never the page */
+}
+
+.panel.span2 { grid-column: auto; }
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+}
+
+.panel-sub {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-dim);
+  margin-left: 0.75rem;
+}
+
+.panel-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+
+/* figure list (SUPPLY) */
+
+.figures {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.9rem 1.25rem;
+}
+
+.figures .fig { display: flex; flex-direction: column; gap: 0.1rem; }
+
+.figures dt {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-dim);
+}
+
+.figures dd {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.figures dd .unit { font-size: 1rem; color: var(--ink-dim); }
+.figures dd a { text-decoration: none; }
+
+/* tables (DEMAND / PIPELINE / LEDGER) */
+
+.scrollbox { overflow-x: auto; }
+
+.boardtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.boardtable th {
+  text-align: left;
+  font-weight: 400;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--rule);
+  padding: 0.3rem 1rem 0.3rem 0;
+  white-space: nowrap;
+}
+
+.boardtable td {
+  padding: 0.42rem 1rem 0.42rem 0;
+  border-bottom: 1px solid rgba(30, 90, 50, 0.35);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.boardtable td.desc { white-space: normal; min-width: 12rem; max-width: 34rem; }
+
+.boardtable .placeholder td {
+  color: var(--ink-dim);
+  border-bottom: none;
+  padding: 1.1rem 0;
+  letter-spacing: 0.1em;
+}
+
+/* status words read as state, not just text */
+.st        { letter-spacing: 0.1em; }
+.st-open   { color: var(--ink); }
+.st-work   { color: var(--amber); }
+.st-done   { color: var(--ink-dim); }
+.st-fail   { color: var(--alarm); }
+
+.txlink { color: var(--ink-dim); text-decoration: none; }
+.txlink:hover { color: var(--amber); }
+
+/* ── ticker tape ──────────────────────────────────────────────────────── */
+
+.tape {
+  overflow: hidden;
+  border-bottom: 2px solid var(--rule);
+  background: #070a06;
+  padding: 0.4rem 0;
+}
+
+/* board.js doubles the ticker line; sliding by exactly half the track's own
+   width (= one copy) makes the loop seamless — no blank window, ever. */
+.tape-track {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  animation: tape 45s linear infinite;
+}
+
+@keyframes tape {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── how it works ─────────────────────────────────────────────────────── */
+
+.how {
+  padding: 1.5rem 1.25rem 2.5rem;
+  max-width: 68ch;
+}
+
+.how h2 {
+  margin: 0 0 0.6rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  color: var(--amber);
+}
+
+.how p { margin: 0 0 0.9rem; color: var(--paper); font-size: 0.85rem; }
+.how code { color: var(--ink); }
+.glyph { color: var(--ink-dim); }
+
+.compliance {
+  border-top: 1px solid var(--rule);
+  padding-top: 0.9rem;
+  color: var(--ink-dim);
+  font-size: 0.75rem;
+}
+
+/* ── embed mode (?embed) — the board as a homepage section ─────────────
+   Compact enough to fit one viewport, so wheel input chains straight to the
+   host page instead of grinding an internal scroll. The long-form prose is
+   hidden but the compliance line ALWAYS stays visible. */
+
+body.embed .how { padding: 0.75rem 1.25rem 1rem; max-width: none; }
+body.embed .how h2,
+body.embed .how p:not(.compliance) { display: none; }
+body.embed .how .compliance { border-top: none; padding-top: 0; }
+body.embed .brand { font-size: clamp(1.3rem, 3.5vw, 1.9rem); }
+body.embed .panel { padding: 0.75rem 1rem 1rem; }
+body.embed .figures dd { font-size: 1.7rem; }
+/* cap long tables in the embed — the full board has no caps */
+body.embed #ledger-rows tr:nth-child(n + 7),
+body.embed #pipeline-rows tr:nth-child(n + 6) { display: none; }
+
+/* ── small screens ────────────────────────────────────────────────────── */
+
+@media (max-width: 820px) {
+  .wall { grid-template-columns: 1fr; }
+  .figures dd { font-size: 1.8rem; }
+}
+
+/* ── reduced motion: no pulse, no tape scroll ─────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .dot.live { animation: none; }
+  .tape-track {
+    animation: none;
+    padding-left: 0;
+    white-space: normal;
+  }
+}

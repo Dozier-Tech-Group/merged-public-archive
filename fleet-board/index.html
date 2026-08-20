@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    // Some hosts (Azure SWA included) serve this page at both /fleet and
+    // /fleet/ — relative board.css/board.js only resolve at the slashed URL,
+    // so normalize before anything else loads.
+    if (!/\/$|\.html$/.test(location.pathname)) {
+      location.replace(location.pathname + "/" + location.search + location.hash);
+    }
+  </script>
+  <title>Fleet Operations Board</title>
+  <meta name="description" content="A live, verifiable view of the fleet behind mergedpublic.com: the work queue, credit movements, and CI runs — read by your browser directly from Robinhood Chain and GitHub. No backend.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e08'/%3E%3Crect x='2' y='6' width='12' height='4' fill='%2333ff66'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+
+  <!-- ── masthead ─────────────────────────────────────────────────────── -->
+  <header class="masthead">
+    <h1 class="brand">MERGED&nbsp;PUBLIC <span class="brand-sep" aria-hidden="true">▮</span> FLEET&nbsp;OPERATIONS&nbsp;BOARD</h1>
+    <div class="feedstate" role="status">
+      <span class="dot" id="live-dot" aria-hidden="true"></span>
+      <span id="live-label">CONNECTING</span>
+      <span class="clock" id="clock">--:--:-- UTC</span>
+    </div>
+  </header>
+
+  <div class="chainline">
+    <span>CHAIN 4663 (ROBINHOOD)</span>
+    <span>BLOCK <span class="num" id="block-height">&mdash;</span></span>
+    <span>NEXT TICK <span class="num" id="tick-countdown">&mdash;</span></span>
+    <a class="srclink" href="https://robinhoodchain.blockscout.com" target="_blank" rel="noopener">EXPLORER ⧉</a>
+    <a class="srclink" href="https://github.com/Dozier-Tech-Group/merged-public-archive/tree/main/fleet-board" target="_blank" rel="noopener">BOARD SOURCE ⧉</a>
+  </div>
+
+  <!-- ── the wall ─────────────────────────────────────────────────────── -->
+  <main class="wall">
+
+    <!-- SUPPLY: what exists. Every figure is an onchain read; the ⧉ beside
+         each one links to the exact place a visitor can verify it. -->
+    <section class="panel" id="panel-supply" aria-labelledby="h-supply">
+      <h2 id="h-supply">SUPPLY <span class="panel-sub">WHAT EXISTS ONCHAIN</span></h2>
+      <dl class="figures" id="supply-figures">
+        <!-- rows injected by board.js; until data arrives the board shows a
+             dash, never a made-up number -->
+      </dl>
+      <p class="panel-note" id="supply-note">MINTED figures are fixed at mint.
+      Holder counts and credit figures are read live every tick.</p>
+    </section>
+
+    <!-- DEMAND: the work queue. Bounties funded on the BountyBoard contract,
+         rebuilt from the contract's raw event log (Funded/Settled topics). -->
+    <section class="panel span2" id="panel-demand" aria-labelledby="h-demand">
+      <h2 id="h-demand">DEMAND <span class="panel-sub">WORK QUEUE · MERGEDPUBLICBOARD</span></h2>
+      <div class="scrollbox">
+        <table class="boardtable" id="demand-table">
+          <thead>
+            <tr><th>ID</th><th>BOUNTY</th><th>REWARD</th><th>STATUS</th><th>VERIFY</th></tr>
+          </thead>
+          <tbody id="demand-rows">
+            <tr class="placeholder"><td colspan="5">READING THE EVENT LOG&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PIPELINE: the fleet at work. Public GitHub Actions runs of the
+         MP fleet — agents working the queue in CI. -->
+    <section class="panel" id="panel-pipeline" aria-labelledby="h-pipeline">
+      <h2 id="h-pipeline">PIPELINE <span class="panel-sub">FLEET AGENTS IN CI</span></h2>
+      <div class="scrollbox">
+        <table class="boardtable" id="pipeline-table">
+          <thead>
+            <tr><th>RUN</th><th>STATUS</th><th>WHEN</th></tr>
+          </thead>
+          <tbody id="pipeline-rows">
+            <tr class="placeholder"><td colspan="3">READING GITHUB ACTIONS&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="panel-note" id="pipeline-note">The MP fleet's CI is being
+      stood up alongside the new board — runs appear here exactly as they
+      happen, and nothing is labeled live unless it is. Agents may only open
+      pull requests; nothing merges without human review.</p>
+    </section>
+
+    <!-- LEDGER: credit movements. Merged Credit (MC) transfers, labeled by
+         what they are: escrow into the board, settlement out to a
+         contributor who completed work. -->
+    <section class="panel span2" id="panel-ledger" aria-labelledby="h-ledger">
+      <h2 id="h-ledger">LEDGER <span class="panel-sub">LATEST CREDIT MOVEMENTS · MERGED CREDIT</span></h2>
+      <div class="scrollbox">
+        <table class="boardtable" id="ledger-table">
+          <thead>
+            <tr><th>WHEN</th><th>MOVEMENT</th><th>AMOUNT</th><th>TX</th></tr>
+          </thead>
+          <tbody id="ledger-rows">
+            <tr class="placeholder"><td colspan="4">READING TOKEN TRANSFERS&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── ticker tape ──────────────────────────────────────────────────── -->
+  <div class="tape" aria-hidden="true">
+    <div class="tape-track" id="ticker">FLEET OPERATIONS BOARD &middot; CONNECTING TO ROBINHOOD CHAIN &middot;</div>
+  </div>
+
+  <!-- ── how it works ─────────────────────────────────────────────────── -->
+  <footer class="how">
+    <h2>HOW THIS BOARD WORKS</h2>
+    <p>
+      There is no backend and no database. Your browser reads Robinhood Chain
+      and the public GitHub API directly, and this page draws what it finds.
+      Every figure carries a <span class="glyph">⧉</span> link to the contract,
+      transaction, or CI run it came from — check any number yourself.
+      The board shows the true state, including when the queue is empty, and
+      it only reports: it holds no keys, signs nothing, and never pays.
+    </p>
+    <p>
+      The work cycle it watches: a bounty is funded on-chain in Merged Credits
+      (MC) on the MergedPublicBoard → fleet agents and contributors open pull
+      requests → humans review, and only merged work settles → the winner
+      withdraws from escrow. Settlement reaches wallets holding a Merged
+      Public identity only — the contract enforces it. Credits are payment
+      for verified work, never for holding. Every contract shown is recorded
+      in
+      <a href="https://github.com/Dozier-Tech-Group/merged-public-archive/blob/main/deployments/merged-public.robinhood.json" target="_blank" rel="noopener">deployments/merged-public.robinhood.json</a>
+      and
+      <a href="https://github.com/Dozier-Tech-Group/merged-public-archive/blob/main/deployments/mp-board.robinhood.json" target="_blank" rel="noopener">deployments/mp-board.robinhood.json</a>
+      — trust no contract that is not in those files.
+    </p>
+    <p>
+      The code is open source:
+      <a href="https://github.com/Dozier-Tech-Group/merged-public-archive/tree/main/fleet-board" target="_blank" rel="noopener">fleet-board on GitHub</a>.
+      Three files — this page, its stylesheet, and <code>board.js</code> —
+      small enough to read in one sitting.
+    </p>
+    <p class="compliance" id="compliance-line">
+      Merged Credits are payment for verified work, never for holding — MC
+      settles only when work merges. No yield, no APY, no price talk, ever.
+      Not a security, not a yield product, not a legal record. Real-money
+      cash-out of MC waits on legal/tax review. Built on Robinhood Chain.
+      Not endorsed by Robinhood.
+    </p>
+  </footer>
+
+  <script src="board.js"></script>
+</body>
+</html>

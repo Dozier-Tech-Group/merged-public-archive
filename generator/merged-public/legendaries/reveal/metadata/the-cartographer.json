@@ -1,0 +1,19 @@
+{
+  "name": "Merged Public — The Cartographer",
+  "description": "A face surveyed into terrain — contour lines, a peak named Provenance, and a route that ends in an X.",
+  "image": "ipfs://__REVEAL_CID__/the-cartographer.png",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Legendary",
+      "value": "The Cartographer"
+    }
+  ]
+}

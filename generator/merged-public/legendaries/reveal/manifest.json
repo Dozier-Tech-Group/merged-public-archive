@@ -1,0 +1,42 @@
+{
+  "note": "Reveal package for the first 5 legendaries. Off-chain. Not pinned.",
+  "resolution": "2048x2048",
+  "count": 5,
+  "items": [
+    {
+      "legendary": "The Founder",
+      "file": "the-founder",
+      "png_bytes": 376411,
+      "png_sha256": "88a9da87e8dd0e65f4bde71cd472372df2f06b621490a55dc96941c511df4ed8",
+      "vaulted": false
+    },
+    {
+      "legendary": "The Night Engineer",
+      "file": "the-night-engineer",
+      "png_bytes": 284515,
+      "png_sha256": "332535fa6ec77562467b5d36816c7b8e86e2fc54b8ead8de867bd5cac25222c1",
+      "vaulted": false
+    },
+    {
+      "legendary": "The Cartographer",
+      "file": "the-cartographer",
+      "png_bytes": 270816,
+      "png_sha256": "c8edea8100301c7d4b842111d8d1e0e3cc63138588a1488199a6b7f1bd6d1016",
+      "vaulted": false
+    },
+    {
+      "legendary": "The Machinist",
+      "file": "the-machinist",
+      "png_bytes": 226238,
+      "png_sha256": "4e66ac86abea9068a2aee32991a867723a47c2ce1c42924d6839853284c0bc2d",
+      "vaulted": false
+    },
+    {
+      "legendary": "The Signal",
+      "file": "the-signal",
+      "png_bytes": 339504,
+      "png_sha256": "f98ea44f1172b5863fab6cbc81604056cc456a3b1e066e07e9b45d4109ccff42",
+      "vaulted": true
+    }
+  ]
+}

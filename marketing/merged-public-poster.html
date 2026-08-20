@@ -1,0 +1,889 @@
+<!--
+  MERGED PUBLIC — composite poster page (goes with www.mergedpublic.com)
+
+  The 100 plates render LIVE from the Series A trait system (Trait
+  Architecture Rev A + MP-0001 Test Bench): MP-0001 is the canonical build,
+  MP-0002..0100 are weighted draws from the recorded seed 20260818.
+
+  Swapping in the real HD NFT artwork (2048x2048 PNG):
+    1. Drop the renders next to this file in a folder named `entities/`,
+       named by id: entities/MP-0001.png ... entities/MP-0100.png
+    2. In the CONFIG block at the bottom of this file, set
+         const IMAGE_BASE = "entities/";
+       (it ships as null so no requests fire while the art is pending).
+    Any plate whose file is missing keeps its live vector proof automatically.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Merged Public — 10,000 unique entities across 9 trait layers and 110 painted traits, algorithmically merged, forever public. Composite plate 0001." />
+<title>Merged Public Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<style>
+  :root {
+    --paper: #efeae0;
+    --paper-deep: #e6e0d2;
+    --paper-well: #ded7c6;
+    --ink: #1c1a16;
+    --ink-soft: #5a5548;
+    --ink-faint: #8d8676;
+    --rule: rgba(28, 26, 22, 0.8);
+    --rule-soft: rgba(28, 26, 22, 0.22);
+    --rule-faint: rgba(28, 26, 22, 0.12);
+    --seal: #8c6d2f;
+    --tier-c: #45413a;
+    --tier-u: #3f6b4f;
+    --tier-r: #3c5d80;
+    --tier-e: #a03434;
+    --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    -webkit-font-smoothing: antialiased;
+    padding: clamp(0.75rem, 3vw, 2.5rem);
+  }
+
+  /* ---------- the sheet ---------- */
+  .sheet {
+    max-width: 1240px;
+    margin: 0 auto;
+    border: 1px solid var(--rule);
+    outline: 1px solid var(--rule);
+    outline-offset: 3px;
+    background:
+      radial-gradient(ellipse 120% 90% at 50% 0%, rgba(255, 253, 246, 0.55), transparent 60%),
+      var(--paper);
+    padding: clamp(1rem, 3vw, 2.25rem);
+  }
+
+  .caps {
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    padding-bottom: 1.25rem;
+  }
+  .mast-col { font-size: 0.6rem; line-height: 2.1; color: var(--ink-soft); }
+  .mast-col .caps { letter-spacing: 0.16em; }
+  .mast-col.right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.9rem; }
+
+  .monogram {
+    width: 3.4rem;
+    height: 4.1rem;
+    border: 1px solid var(--rule);
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.9rem;
+  }
+  .monogram span { position: relative; }
+  .monogram span::after {
+    content: "";
+    position: absolute;
+    inset: -0.35rem -0.5rem;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .mp-10k { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--ink); margin-top: 0.9rem; }
+
+  .mast-center { text-align: center; padding-top: 0.5rem; }
+  .mast-center h1 {
+    margin: 0;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4.8vw, 3.5rem);
+    letter-spacing: 0.26em;
+    text-indent: 0.26em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mast-sub {
+    margin: 0.7rem 0 0;
+    font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .mast-tag {
+    margin: 0.55rem 0 0;
+    font-size: 0.68rem;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .mast-ded {
+    margin: 1rem auto 0;
+    max-width: 34rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-style: italic;
+    font-size: 0.86rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .mast-ded::before,
+  .mast-ded::after { content: ""; flex: 1; border-top: 1px solid var(--rule-soft); }
+
+  .roundel { width: 4.6rem; height: 4.6rem; }
+  .plate-no {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    border: 1px solid var(--rule);
+    padding: 0.3rem 0.7rem 0.3rem 0.9rem;
+  }
+
+  /* ---------- portrait grid ---------- */
+  .plate-frame { border: 1px solid var(--rule); padding: clamp(0.5rem, 1.4vw, 0.9rem); }
+  .plate-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0.15rem 0.1rem 0.6rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+    gap: clamp(0.4rem, 1vw, 0.65rem) clamp(0.3rem, 0.8vw, 0.5rem);
+  }
+  /* wide screens: the plate resolves to a strict 10 × 10 composite */
+  @media (min-width: 980px) {
+    .grid { grid-template-columns: repeat(10, 1fr); }
+  }
+  figure.entity { margin: 0; }
+  .frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--rule-soft);
+    background: var(--paper-deep);
+    overflow: hidden;
+  }
+  .frame svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .frame img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0; /* keeps a layout box so lazy-loading still triggers; fades in on load */
+    transition: opacity 0.4s ease;
+  }
+  .frame img.loaded { opacity: 1; z-index: 1; }
+  figure.entity figcaption {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    color: var(--ink-soft);
+    margin-top: 0.35rem;
+  }
+  @media (hover: hover) {
+    figure.entity { transition: transform 0.25s ease; }
+    figure.entity:hover { transform: translateY(-3px); }
+    figure.entity:hover figcaption { color: var(--ink); }
+  }
+
+  /* ---------- traits & classifications ---------- */
+  .legend { border: 1px solid var(--rule); border-top: none; }
+  .legend-title {
+    margin: 0;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-deep);
+  }
+  /* the 9 layers flow as balanced newspaper columns — self-adjusting at any width */
+  .legend-cols {
+    columns: 15rem;
+    column-gap: 0;
+    column-rule: 1px solid var(--rule-faint);
+    padding: 0.35rem 0;
+  }
+  .legend-col {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    padding: 0.7rem 1.1rem 0.9rem;
+  }
+  .legend-col h3 {
+    margin: 0 0 0.6rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+  .legend-col h3 .lyr {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.52rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+  }
+  .legend-col ul { list-style: none; margin: 0; padding: 0; }
+  .legend-col li {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0.2rem 0;
+  }
+  .tick { width: 0.42rem; height: 0.42rem; border: 1px solid var(--ink-faint); flex: none; }
+  .diamond { width: 0.44rem; height: 0.44rem; transform: rotate(45deg); flex: none; }
+
+  /* ---------- legendary 1/1s ---------- */
+  .legends-band { border: 1px solid var(--rule); border-top: none; }
+  .legends-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .legend-piece {
+    padding: 0.85rem 1.1rem 1rem;
+    border-right: 1px solid var(--rule-faint);
+    border-bottom: 1px solid var(--rule-faint);
+  }
+  .legend-piece:nth-child(5n) { border-right: none; }
+  .legend-piece:nth-child(n+6) { border-bottom: none; }
+  .legend-piece b {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+  }
+  .legend-piece b .diamond { background: var(--seal); }
+  .legend-piece span {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0.3rem 0 0 1rem;
+    line-height: 1.6;
+  }
+  @media (max-width: 900px) {
+    .legends-list { grid-template-columns: repeat(2, 1fr); }
+    .legend-piece:nth-child(5n) { border-right: 1px solid var(--rule-faint); }
+    .legend-piece:nth-child(2n) { border-right: none; }
+    .legend-piece:nth-child(n+6) { border-bottom: 1px solid var(--rule-faint); }
+    .legend-piece:nth-child(n+9) { border-bottom: none; }
+  }
+  @media (max-width: 560px) {
+    .legends-list { grid-template-columns: 1fr; }
+    .legend-piece { border-right: none !important; border-bottom: 1px solid var(--rule-faint) !important; }
+    .legend-piece:last-child { border-bottom: none !important; }
+  }
+
+  /* ---------- colophon ---------- */
+  .colophon {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.2fr;
+    border: 1px solid var(--rule);
+    border-top: none;
+  }
+  .colo { padding: 1.2rem 1.4rem 1.4rem; border-right: 1px solid var(--rule-faint); }
+  .colo:last-child { border-right: none; }
+  .colo h3 {
+    margin: 0 0 0.8rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+  .formula {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .qr {
+    width: 4.2rem;
+    height: 4.2rem;
+    flex: none;
+    border: 1px solid var(--rule);
+    padding: 0.3rem;
+    display: grid;
+    place-items: center;
+  }
+  .qr svg { width: 100%; height: 100%; display: block; }
+  .formula-text { font-family: var(--mono); font-size: 0.58rem; line-height: 1.9; letter-spacing: 0.05em; color: var(--ink-soft); text-transform: uppercase; }
+  .formula-text .fx { color: var(--ink); }
+
+  .supply { text-align: center; }
+  .supply .big {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin: 0.4rem 0 0.2rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .supply .small { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-soft); }
+  .supply .split {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 0.5rem;
+  }
+
+  .preserved { text-align: center; }
+  .chains { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
+  .chain { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+  .chain svg { width: 1.6rem; height: 1.6rem; }
+  .chain span { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.18em; color: var(--ink-soft); }
+
+  footer.sig {
+    text-align: center;
+    padding: 1.6rem 0 0.4rem;
+  }
+  .sig .mini-mono {
+    display: inline-grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.5rem;
+    border: 1px solid var(--rule);
+    font-size: 0.85rem;
+    margin-bottom: 0.55rem;
+  }
+  .sig p { margin: 0; font-size: 0.6rem; letter-spacing: 0.34em; text-indent: 0.34em; text-transform: uppercase; color: var(--ink-soft); }
+
+  /* ---------- mid widths ---------- */
+  @media (max-width: 900px) {
+    .colophon { grid-template-columns: 1fr; }
+    .colo { border-right: none; border-bottom: 1px solid var(--rule-faint); }
+    .colo:last-child { border-bottom: none; }
+  }
+
+  /* ---------- print: the sheet is meant to be held ---------- */
+  @media print {
+    body { padding: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    figure.entity { animation: none; }
+  }
+
+  /* ---------- motion ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    figure.entity { animation: settle 0.5s ease backwards; }
+    @keyframes settle {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+  }
+
+  /* ---------- small screens ---------- */
+  @media (max-width: 720px) {
+    .masthead { grid-template-columns: 1fr; gap: 1rem; text-align: center; }
+    .mast-col.right { align-items: center; text-align: center; }
+    .monogram { margin: 0 auto 0.9rem; }
+    .mast-center h1 {
+      white-space: normal;
+      font-size: clamp(1.35rem, 7vw, 2.4rem);
+      letter-spacing: 0.16em;
+      text-indent: 0.16em;
+    }
+    .mast-sub { letter-spacing: 0.28em; text-indent: 0.28em; }
+    .mast-tag { letter-spacing: 0.22em; text-indent: 0.22em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <!-- ═══════════ masthead ═══════════ -->
+  <header class="masthead">
+    <div class="mast-col">
+      <div class="monogram" aria-hidden="true"><span>MP</span></div>
+      <div class="caps">A study in decentralized identity</div>
+      <div class="caps">10,000 unique entities</div>
+      <div class="caps">9 trait layers &middot; 110 painted traits</div>
+      <div class="caps">Algorithmically merged</div>
+      <div class="caps">Forever public</div>
+      <div class="mp-10k">MP&nbsp;//&nbsp;10K</div>
+    </div>
+
+    <div class="mast-center">
+      <h1>Merged Public</h1>
+      <p class="mast-sub">10,000 unique entities</p>
+      <p class="mast-tag">Onchain&thinsp;.&nbsp;Merged&thinsp;.&nbsp;Public&thinsp;.</p>
+      <p class="mast-ded">How the Merged Public solved education&nbsp;&mdash;&nbsp;Louisiana first</p>
+    </div>
+
+    <div class="mast-col right">
+      <div>
+        <div class="caps">Merged Public Archive</div>
+        <div class="caps">MP-10000 Collection</div>
+        <div class="caps">Series A &middot; Est. 2024</div>
+        <div class="caps">Onchain record</div>
+      </div>
+      <svg class="roundel" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <path id="arcTop" d="M 14 50 A 36 36 0 0 1 86 50" />
+          <path id="arcBot" d="M 20 50 A 30 30 0 0 0 80 50" />
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="var(--rule)" stroke-width="1" />
+        <circle cx="50" cy="50" r="41" fill="none" stroke="var(--rule-soft)" stroke-width="1" />
+        <text font-family="EB Garamond, serif" font-size="10.5" letter-spacing="2.5" fill="var(--ink)">
+          <textPath href="#arcTop" startOffset="50%" text-anchor="middle">MERGED PUBLIC</textPath>
+        </text>
+        <text font-family="EB Garamond, serif" font-size="8.5" letter-spacing="3" fill="var(--ink-soft)">
+          <textPath href="#arcBot" startOffset="50%" text-anchor="middle">· ARCHIVE ·</textPath>
+        </text>
+        <text x="50" y="56" text-anchor="middle" font-family="EB Garamond, serif" font-size="17" fill="var(--ink)">MP</text>
+      </svg>
+      <div class="plate-no">0001</div>
+    </div>
+  </header>
+
+  <!-- ═══════════ the composite ═══════════ -->
+  <main class="plate-frame">
+    <div class="plate-head">
+      <span>Plate 0001 &middot; Entities MP-0001 &ndash; MP-0100</span>
+      <span>Vector proofs &middot; export 2048 &times; 2048 PNG &middot; Seed 20260818</span>
+    </div>
+    <noscript><p style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-align: center; color: var(--ink-soft);">THE COMPOSITE PLATE IS DRAWN BY JAVASCRIPT &mdash; ENABLE IT TO VIEW THE 100 ENTITIES.</p></noscript>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <!-- ═══════════ traits & classifications ═══════════ -->
+  <section class="legend" aria-label="Traits and classifications">
+    <h2 class="legend-title caps">Traits &amp; Classifications &middot; 9 Layers &middot; 110 Traits</h2>
+    <div class="legend-cols" id="legend"></div>
+  </section>
+
+  <!-- ═══════════ legendary 1/1s ═══════════ -->
+  <section class="legends-band" aria-label="Legendary one of ones">
+    <h2 class="legend-title caps">Legendary 1/1s &middot; Ten Pieces &middot; Fully Hand-Made</h2>
+    <div class="legends-list" id="legends"></div>
+  </section>
+
+  <!-- ═══════════ colophon ═══════════ -->
+  <section class="colophon">
+    <div class="colo">
+      <h3>Algorithmic merge formula</h3>
+      <div class="formula">
+        <div class="qr" aria-hidden="true">
+          <!-- placeholder mark, not a scannable code -->
+          <svg viewBox="0 0 44 44">
+            <g fill="none" stroke="var(--ink)" stroke-width="2">
+              <rect x="2" y="2" width="12" height="12" />
+              <rect x="30" y="2" width="12" height="12" />
+              <rect x="2" y="30" width="12" height="12" />
+            </g>
+            <g fill="var(--ink)">
+              <rect x="6" y="6" width="4" height="4" />
+              <rect x="34" y="6" width="4" height="4" />
+              <rect x="6" y="34" width="4" height="4" />
+              <rect x="20" y="8" width="3" height="3" /><rect x="26" y="14" width="3" height="3" />
+              <rect x="20" y="20" width="3" height="3" /><rect x="32" y="22" width="3" height="3" />
+              <rect x="14" y="20" width="3" height="3" /><rect x="38" y="30" width="3" height="3" />
+              <rect x="20" y="28" width="3" height="3" /><rect x="26" y="34" width="3" height="3" />
+              <rect x="32" y="38" width="3" height="3" /><rect x="20" y="38" width="3" height="3" />
+            </g>
+          </svg>
+        </div>
+        <div class="formula-text">
+          <span class="fx">ID = HASH(TRAITS &middot; SEED &middot; RARITY &middot; VARIATION)</span><br />
+          4,128,768,000 combinations &middot; min 2-trait distance<br />
+          9 layers &middot; 110 traits &middot; 6 rules &middot; seed 20260818<br />
+          Verifiable. Permanent. Public.
+        </div>
+      </div>
+    </div>
+
+    <div class="colo supply">
+      <h3>Total supply</h3>
+      <div class="big">10,000</div>
+      <div class="small">Unique entities</div>
+      <div class="split">9,990 generated &middot; 10 legendary 1/1s</div>
+    </div>
+
+    <div class="colo preserved">
+      <h3>Preserved onchain</h3>
+      <div class="chains">
+        <div class="chain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.1" aria-hidden="true">
+            <path d="M12 2 L19 12 L12 16 L5 12 Z" /><path d="M5 13.5 L12 22 L19 13.5 L12 17.5 Z" />
+          </svg>
+          <span>Ethereum</span>
+        </div>
+        <div class="chain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.1" aria-hidden="true">
+            <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" /><path d="M3 7 L12 12 L21 7 M12 12 L12 22" />
+          </svg>
+          <span>Arweave</span>
+        </div>
+        <div class="chain">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="1.1" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.5" /><text x="12" y="15.5" text-anchor="middle" font-family="EB Garamond, serif" font-size="9.5" fill="var(--ink)" stroke="none">a</text>
+          </svg>
+          <span>IPFS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="sig">
+    <div class="mini-mono" aria-hidden="true">MP</div>
+    <p>Merged Public &middot; One network for every institution</p>
+  </footer>
+</div>
+
+<script>
+/* ================= trait data ================= */
+const BG=[
+ {name:'Archive Manila',fill:'#dfcfa8',fg:'#3a3020'},
+ {name:'Ledger Cream',fill:'#ece2c8',fg:'#3a3020'},
+ {name:'Slate Grey',fill:'#979b9e',fg:'#23262a'},
+ {name:'Ink Wash',fill:'#4c5158',fg:'#e6ded0'},
+ {name:'Blueprint Cyan',fill:'#1e4e6e',fg:'#cfe3ef',grid:1},
+ {name:'Oxide Red',fill:'#9c4a38',fg:'#f0dfd2'},
+ {name:'Library Green',fill:'#4e6650',fg:'#e2e6d4'},
+ {name:'Carbon Black',fill:'#26251f',fg:'#d8cfb8'},
+ {name:'Gilded Parchment',fill:'#d8b96a',fg:'#4a3a14'},
+ {name:'Vellum Rose',fill:'#d9b8ac',fg:'#5a3a30'},
+ {name:'Microfiche Silver',fill:'#c3c7cc',fg:'#3a4048'},
+ {name:'Redacted',fill:'#181818',fg:'#cfc6b2',bars:1},
+];
+const BASES=[
+ {name:'Tone I',skin:'#f2d3b3',shade:'#cfa77e'},
+ {name:'Tone II',skin:'#e2b98f',shade:'#bd9264'},
+ {name:'Tone III',skin:'#c68f62',shade:'#9e6d43'},
+ {name:'Tone IV',skin:'#a96f45',shade:'#82522f'},
+ {name:'Tone V',skin:'#8a5530',shade:'#663d20'},
+ {name:'Tone VI',skin:'#6b3f24',shade:'#4a2a16'},
+ {name:'Bronze Cast',skin:'#96743e',shade:'#6b5127',fx:'bronze'},
+ {name:'Marble Cast',skin:'#ddd8cc',shade:'#a49c8c',fx:'marble'},
+ {name:'Graphite Sketch',skin:'#cfc9bd',shade:'#847d70',fx:'graphite'},
+ {name:'Cyber Chassis',skin:'#9aa4ad',shade:'#6b7681',fx:'cyber'},
+];
+const INK='#241d15', EYEW='#f6f2e8';
+/* head cap silhouette shared by most hair */
+const CAP='M183,252 C179,158 214,144 256,144 C298,144 333,158 329,252 C322,220 314,204 305,198 C292,188 276,184 256,184 C236,184 220,188 207,198 C198,204 190,220 183,252 Z';
+const HAIR=[
+ {name:'Bald',draw:()=>({back:'',front:''})},
+ {name:'Short Crop',c:'#3a2a1c',tall:0,draw:c=>({back:'',front:`<path d="${CAP}" fill="${c}"/>`})},
+ {name:'Side Part',c:'#241a10',tall:0,draw:c=>({back:'',front:`<path d="M183,252 C179,158 214,144 256,144 C298,144 333,158 329,252 C324,214 318,198 308,192 C290,181 240,196 214,206 C200,212 188,228 183,252 Z" fill="${c}"/>`})},
+ {name:'Curly',c:'#2e2018',tall:0,draw:c=>({back:'',front:`<path d="M183,252 Q166,196 190,166 Q198,138 228,142 Q240,124 262,136 Q288,124 300,146 Q326,146 328,176 Q344,204 329,252 C322,220 314,204 305,198 C292,188 276,184 256,184 C236,184 220,188 207,198 C198,204 190,220 183,252 Z" fill="${c}"/>`})},
+ {name:'Long Straight',c:'#4a3018',tall:1,draw:c=>({back:`<path d="M186,214 C176,290 176,336 166,388 L212,388 C205,330 203,276 205,228 Z" fill="${c}"/><path d="M326,214 C336,290 336,336 346,388 L300,388 C307,330 309,276 307,228 Z" fill="${c}"/>`,front:`<path d="${CAP}" fill="${c}"/><path d="M256,146 L256,184" stroke="${INK}" stroke-width="1.4" opacity=".5"/>`})},
+ {name:'Bun',c:'#2a1c12',tall:1,draw:c=>({back:`<circle cx="256" cy="132" r="24" fill="${c}"/>`,front:`<path d="${CAP}" fill="${c}"/>`})},
+ {name:'Afro',c:'#241a12',tall:1,draw:c=>({back:`<circle cx="256" cy="196" r="102" fill="${c}"/>`,front:`<path d="${CAP}" fill="${c}"/>`})},
+ {name:'Grey Professor',c:'#b9b4a8',tall:0,draw:c=>({back:`<ellipse cx="183" cy="222" rx="26" ry="32" fill="${c}"/><ellipse cx="329" cy="222" rx="26" ry="32" fill="${c}"/>`,front:`<path d="M206,166 Q256,146 306,166" stroke="${c}" stroke-width="3" fill="none" opacity=".55"/>`})},
+ {name:'Einstein Shock',c:'#cfcabe',tall:1,draw:c=>({back:`<path d="M178,240 L152,196 L190,200 L182,150 L218,172 L228,126 L256,158 L284,126 L294,172 L330,150 L322,200 L360,196 L334,240 Z" fill="${c}"/>`,front:`<path d="${CAP}" fill="${c}"/>`})},
+ {name:'Ink-Dipped',c:'#4a3018',tall:1,draw:c=>({back:`<path d="M186,214 C176,290 176,336 166,388 L212,388 C205,330 203,276 205,228 Z" fill="${c}"/><path d="M326,214 C336,290 336,336 346,388 L300,388 C307,330 309,276 307,228 Z" fill="${c}"/><path d="M170,344 L209,344 L212,388 L166,388 Z" fill="#15100a"/><path d="M303,344 L342,344 L346,388 L300,388 Z" fill="#15100a"/>`,front:`<path d="${CAP}" fill="${c}"/>`})},
+];
+const TORSO='M118,470 C122,410 174,380 256,380 C338,380 390,410 394,470 Z';
+const CLOTH=[
+ {name:'Tweed Blazer',draw:()=>`<path d="${TORSO}" fill="#6b5a40"/><polygon points="236,382 276,382 256,418" fill="#ece4d0"/><path d="M236,382 L258,420 L222,408 Z" fill="#584a34"/><path d="M276,382 L254,420 L290,408 Z" fill="#584a34"/><g stroke="#7d6c50" stroke-width="1.2" opacity=".6"><path d="M150,430 l8,-8 M170,446 l8,-8 M200,458 l8,-8 M310,452 l8,-8 M340,436 l8,-8 M356,456 l8,-8"/></g>`},
+ {name:'Oxford Shirt',draw:()=>`<path d="${TORSO}" fill="#b9cdd8"/><polygon points="236,382 256,404 226,398" fill="#e8f0f4"/><polygon points="276,382 256,404 286,398" fill="#e8f0f4"/><path d="M256,404 L256,470" stroke="#8aa2b0" stroke-width="1.6"/><circle cx="256" cy="424" r="2.2" fill="#71889a"/><circle cx="256" cy="446" r="2.2" fill="#71889a"/>`},
+ {name:'Cardigan',draw:()=>`<path d="${TORSO}" fill="#8c5a38"/><polygon points="236,382 276,382 256,416" fill="#ece4d0"/><path d="M246,398 L246,470 M266,398 L266,470" stroke="#6e4227" stroke-width="2"/><circle cx="256" cy="432" r="2.4" fill="#4c2c18"/><circle cx="256" cy="452" r="2.4" fill="#4c2c18"/>`},
+ {name:'Lab Coat',draw:()=>`<path d="${TORSO}" fill="#f2efe6"/><polygon points="236,382 276,382 256,414" fill="#cfd6d8"/><path d="M236,382 L260,420 L224,410 Z" fill="#dcd9cc"/><path d="M276,382 L252,420 L288,410 Z" fill="#dcd9cc"/><path d="M256,420 L256,470" stroke="#b8b4a4" stroke-width="1.6"/><path d="M300,440 h34 v22 h-34 Z" fill="none" stroke="#b8b4a4" stroke-width="1.6"/>`},
+ {name:'Coveralls',draw:()=>`<path d="${TORSO}" fill="#3c5266"/><polygon points="236,382 276,382 256,408" fill="#d8cfb8"/><path d="M256,408 L256,470" stroke="#2a3c4c" stroke-width="3"/><path d="M186,440 h36 v24 h-36 Z" fill="none" stroke="#8fa4b4" stroke-width="1.8"/><path d="M186,448 h36" stroke="#8fa4b4" stroke-width="1.2"/>`},
+ {name:'Turtleneck',draw:()=>`<path d="${TORSO}" fill="#2b2620"/><path d="M228,352 h56 v34 q-28,10 -56,0 Z" fill="#2b2620"/><path d="M228,362 h56" stroke="#413a30" stroke-width="2"/><path d="M228,370 h56" stroke="#413a30" stroke-width="2"/>`},
+ {name:"Dean's Robe",draw:()=>`<path d="${TORSO}" fill="#1e1b16"/><path d="M236,382 L216,470 L180,470 C186,420 208,392 236,382 Z" fill="#4a2c58"/><path d="M276,382 L296,470 L332,470 C326,420 304,392 276,382 Z" fill="#4a2c58"/><polygon points="236,382 276,382 256,412" fill="#d8cfb8"/>`},
+ {name:'Gilded Lab Coat',draw:()=>`<path d="${TORSO}" fill="#f2efe6"/><path d="M236,382 L260,420 L224,410 Z" fill="#d4af37"/><path d="M276,382 L252,420 L288,410 Z" fill="#d4af37"/><polygon points="236,382 276,382 256,414" fill="#efe2b8"/><path d="M256,420 L256,470" stroke="#d4af37" stroke-width="2"/><path d="M118,468 C122,410 174,380 256,380 C338,380 390,410 394,468" fill="none" stroke="#d4af37" stroke-width="2.5"/>`},
+];
+const EXPR=[
+ {name:'Neutral Study',draw:b=>eyes()+brows(220,220)+nose(b)+`<path d="M237,292 L275,292" ${mouth()}/>`},
+ {name:'Slight Smile',draw:b=>eyes()+brows(220,220)+nose(b)+`<path d="M235,289 Q256,301 277,289" ${mouth()}/>`},
+ {name:'Focused',draw:b=>eyes()+`<rect x="217" y="226" width="22" height="9" fill="${b.skin}"/><rect x="273" y="226" width="22" height="9" fill="${b.skin}"/>`+`<path d="M212,224 L242,217 M270,217 L300,224" stroke="${INK}" stroke-width="3.4" stroke-linecap="round" fill="none"/>`+nose(b)+`<path d="M240,292 L272,292" ${mouth()}/>`},
+ {name:'Weary Scholar',draw:b=>eyes()+`<path d="M212,216 L242,223 M270,223 L300,216" stroke="${INK}" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M219,252 Q228,257 237,252 M275,252 Q284,257 293,252" stroke="${b.shade}" stroke-width="2" fill="none"/>`+nose(b)+`<path d="M236,294 Q256,286 276,294" ${mouth()}/>`},
+ {name:'Raised Brow',draw:b=>eyes()+`<path d="M212,212 Q227,203 242,209" stroke="${INK}" stroke-width="3.2" stroke-linecap="round" fill="none"/><path d="M270,221 L300,221" stroke="${INK}" stroke-width="3.2" stroke-linecap="round"/>`+nose(b)+`<path d="M240,292 L268,292" ${mouth()}/>`},
+ {name:'Grinning',draw:b=>eyes()+brows(218,218)+nose(b)+`<path d="M232,286 Q256,312 280,286 Z" fill="${EYEW}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/>`},
+ {name:'Deadpan Stare',draw:b=>`<ellipse cx="228" cy="238" rx="10.5" ry="11.5" fill="${EYEW}" stroke="${b.shade}" stroke-width="1"/><ellipse cx="284" cy="238" rx="10.5" ry="11.5" fill="${EYEW}" stroke="${b.shade}" stroke-width="1"/><circle cx="228" cy="239" r="2.6" fill="${INK}"/><circle cx="284" cy="239" r="2.6" fill="${INK}"/>`+`<path d="M214,212 L242,212 M270,212 L298,212" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>`+nose(b)+`<path d="M246,293 L266,293" ${mouth()}/>`},
+ {name:'Eureka',draw:b=>eyes()+`<path d="M212,210 Q227,201 242,207 M270,207 Q285,201 300,210" stroke="${INK}" stroke-width="3.2" stroke-linecap="round" fill="none"/>`+nose(b)+`<ellipse cx="256" cy="295" rx="10" ry="12" fill="#5c2b24" stroke="${INK}" stroke-width="2"/><g stroke="${INK}" stroke-width="2" stroke-linecap="round"><path d="M334,178 l8,-8 M338,190 l11,0 M330,166 l0,-11"/></g>`},
+];
+function eyes(){return `<ellipse cx="228" cy="238" rx="9" ry="10" fill="${EYEW}"/><ellipse cx="284" cy="238" rx="9" ry="10" fill="${EYEW}"/><circle cx="228" cy="239" r="4" fill="${INK}"/><circle cx="284" cy="239" r="4" fill="${INK}"/>`}
+function brows(l,r){return `<path d="M213,${l} Q227,${l-6} 241,${l} M271,${r} Q285,${r-6} 299,${r}" stroke="${INK}" stroke-width="3.2" stroke-linecap="round" fill="none"/>`}
+function nose(b){return `<path d="M256,244 C258,254 258,260 251,264" stroke="${b.shade}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`}
+function mouth(){return `stroke="${INK}" stroke-width="2.6" stroke-linecap="round" fill="none"`}
+const GLS='#2b2620';
+const EYEWR=[
+ {name:'None',draw:()=>''},
+ {name:'Round Wire',draw:()=>`<circle cx="228" cy="239" r="14.5" fill="none" stroke="${GLS}" stroke-width="2.2"/><circle cx="284" cy="239" r="14.5" fill="none" stroke="${GLS}" stroke-width="2.2"/><path d="M242.5,237 Q256,231 269.5,237 M213.5,237 L188,231 M298.5,237 L324,231" stroke="${GLS}" stroke-width="2.2" fill="none"/>`},
+ {name:'Rectangular',draw:()=>`<rect x="211" y="227" width="34" height="24" rx="3" fill="none" stroke="${GLS}" stroke-width="2.4"/><rect x="267" y="227" width="34" height="24" rx="3" fill="none" stroke="${GLS}" stroke-width="2.4"/><path d="M245,236 L267,236 M211,234 L188,230 M301,234 L324,230" stroke="${GLS}" stroke-width="2.4"/>`},
+ {name:'Reading',draw:()=>`<rect x="215" y="244" width="26" height="15" rx="2" fill="none" stroke="${GLS}" stroke-width="2"/><rect x="271" y="244" width="26" height="15" rx="2" fill="none" stroke="${GLS}" stroke-width="2"/><path d="M241,250 L271,250 M215,249 L190,242 M297,249 L322,242" stroke="${GLS}" stroke-width="2"/>`},
+ {name:'Horn-Rimmed',draw:()=>`<rect x="210" y="226" width="36" height="26" rx="5" fill="none" stroke="${GLS}" stroke-width="3"/><rect x="266" y="226" width="36" height="26" rx="5" fill="none" stroke="${GLS}" stroke-width="3"/><path d="M210,229 h36 M266,229 h36" stroke="${GLS}" stroke-width="6"/><path d="M246,236 L266,236 M210,234 L188,229 M302,234 L324,229" stroke="${GLS}" stroke-width="3"/>`},
+ {name:'Safety Goggles',draw:()=>`<rect x="202" y="221" width="108" height="36" rx="18" fill="#cfd8dc" opacity=".5"/><rect x="202" y="221" width="108" height="36" rx="18" fill="none" stroke="#48545e" stroke-width="3.4"/><path d="M202,238 L184,236 M310,238 L328,236" stroke="#48545e" stroke-width="5"/>`},
+ {name:'Pince-Nez',draw:()=>`<circle cx="230" cy="240" r="11" fill="none" stroke="${GLS}" stroke-width="1.8"/><circle cx="282" cy="240" r="11" fill="none" stroke="${GLS}" stroke-width="1.8"/><path d="M241,238 Q256,233 271,238" stroke="${GLS}" stroke-width="1.8" fill="none"/><path d="M291,247 Q318,272 314,306" stroke="${GLS}" stroke-width="1.4" fill="none" stroke-dasharray="3 3"/>`},
+ {name:'Monocle',draw:()=>`<circle cx="284" cy="239" r="13.5" fill="none" stroke="${GLS}" stroke-width="2.4"/><path d="M294,249 Q316,290 306,330" stroke="${GLS}" stroke-width="1.4" fill="none" stroke-dasharray="3 3"/>`},
+ {name:'Welding Goggles',draw:()=>`<circle cx="228" cy="238" r="16" fill="#37474f" stroke="#22303a" stroke-width="3.4"/><circle cx="284" cy="238" r="16" fill="#37474f" stroke="#22303a" stroke-width="3.4"/><path d="M244,236 L268,236" stroke="#22303a" stroke-width="4"/><path d="M212,234 L186,230 M300,234 L326,230" stroke="#22303a" stroke-width="6"/><circle cx="233" cy="233" r="3" fill="#8aa4b0" opacity=".8"/><circle cx="289" cy="233" r="3" fill="#8aa4b0" opacity=".8"/>`},
+ {name:'AR Lens',draw:()=>`<rect x="266" y="226" width="36" height="24" rx="2" fill="#5ac8ff" opacity=".3"/><rect x="266" y="226" width="36" height="24" rx="2" fill="none" stroke="#2f8cb4" stroke-width="2.2"/><path d="M302,236 L326,230" stroke="#2f8cb4" stroke-width="2.4"/><circle cx="271" cy="231" r="2" fill="#bff0ff"/>`},
+];
+const HEADW=[
+ {name:'None',draw:()=>''},
+ {name:'Flat Cap',draw:()=>`<path d="M182,206 C182,152 330,152 330,206 L330,212 L182,212 Z" fill="#5c4a34"/><path d="M176,208 h172 a5,5 0 0 1 0,10 h-172 a5,5 0 0 1 0,-10 Z" fill="#473826"/>`},
+ {name:'Beanie',draw:()=>`<path d="M182,204 C182,148 330,148 330,204 L330,210 L182,210 Z" fill="#8c3b30"/><rect x="179" y="198" width="154" height="18" rx="8" fill="#732f26"/>`},
+ {name:'Headphones',draw:()=>`<path d="M184,206 C196,132 316,132 328,206" fill="none" stroke="#33302a" stroke-width="11" stroke-linecap="round"/><rect x="170" y="226" width="26" height="42" rx="11" fill="#33302a"/><rect x="316" y="226" width="26" height="42" rx="11" fill="#33302a"/>`},
+ {name:'Beret',draw:()=>`<g transform="rotate(-8 248 168)"><ellipse cx="248" cy="168" rx="80" ry="33" fill="#5a2c34"/><circle cx="248" cy="140" r="5" fill="#5a2c34"/></g>`},
+ {name:'Hard Hat',draw:()=>`<path d="M180,204 C180,146 332,146 332,204 Z" fill="#f2b32a"/><ellipse cx="256" cy="205" rx="90" ry="12" fill="#d99a18"/><path d="M256,148 L256,200" stroke="#d99a18" stroke-width="8" stroke-linecap="round"/>`},
+ {name:'Graduation Cap',draw:()=>`<path d="M196,168 h120 v22 q-60,16 -120,0 Z" fill="#26221c"/><polygon points="256,116 356,150 256,184 156,150" fill="#26221c"/><polygon points="256,124 340,150 256,176 172,150" fill="#332e26"/><path d="M256,150 L322,192" stroke="#c9a44a" stroke-width="2.4"/><circle cx="322" cy="196" r="5" fill="#c9a44a"/>`},
+ {name:'Green Eyeshade',draw:()=>`<path d="M186,216 Q256,176 326,216 L326,226 Q256,190 186,226 Z" fill="#2e7d5b" opacity=".85"/><path d="M186,219 Q256,182 326,219" fill="none" stroke="#1d5a3f" stroke-width="2.4"/>`},
+ {name:'Laurel Wreath',draw:()=>{let s='';for(let i=0;i<5;i++){const t=i/4,y=166+t*54,xl=196-t*16,xr=316+t*16,r=-30-t*35;s+=`<g transform="rotate(${r} ${xl} ${y})"><ellipse cx="${xl}" cy="${y}" rx="12" ry="5.5" fill="#7c8c4f"/></g><g transform="rotate(${-r} ${xr} ${y})"><ellipse cx="${xr}" cy="${y}" rx="12" ry="5.5" fill="#7c8c4f"/></g>`}return s}},
+];
+const ACC=[
+ {name:'None',draw:()=>''},
+ {name:'ID Badge',draw:()=>`<rect x="288" y="428" width="46" height="32" rx="3" fill="#f4f0e4" stroke="#8f8874" stroke-width="1.5"/><rect x="288" y="428" width="46" height="7" rx="3" fill="#a32c22"/><rect x="293" y="440" width="12" height="12" fill="#c9c2ae"/><path d="M309,442 h20 M309,447 h20 M309,452 h14" stroke="#8f8874" stroke-width="1.4"/>`},
+ {name:'Pencil Behind Ear',draw:()=>`<g transform="rotate(24 330 226)"><rect x="326" y="200" width="7" height="46" fill="#e0a83c"/><polygon points="326,200 333,200 329.5,190" fill="#e8d8b8"/><polygon points="328,193.5 331,193.5 329.5,190" fill="#241d15"/><rect x="326" y="240" width="7" height="6" fill="#c46a5a"/></g>`},
+ {name:'Open Book',draw:()=>`<path d="M172,470 L172,440 Q214,428 256,442 L256,470 Z" fill="#f4ecd8" stroke="#8f8874" stroke-width="1.6"/><path d="M340,470 L340,440 Q298,428 256,442 L256,470 Z" fill="#f4ecd8" stroke="#8f8874" stroke-width="1.6"/><path d="M186,448 q32,-9 58,0 M186,456 q32,-9 58,0 M268,448 q32,-9 58,0 M268,456 q32,-9 58,0" stroke="#b0a890" stroke-width="1.3" fill="none"/>`},
+ {name:'Rolled Blueprint',draw:()=>`<g transform="rotate(-18 200 452)"><rect x="150" y="444" width="104" height="18" rx="9" fill="#3f6f8f"/><ellipse cx="254" cy="453" rx="6" ry="9" fill="#cfe3ef"/><path d="M160,449 h80 M160,457 h80" stroke="#345d78" stroke-width="1.4"/></g>`},
+ {name:'Slide Rule',draw:()=>`<g transform="rotate(-9 190 440)"><rect x="182" y="408" width="15" height="52" rx="2" fill="#d8c489" stroke="#a08c54" stroke-width="1.4"/><path d="M186,414 h8 M186,422 h5 M186,430 h8 M186,438 h5 M186,446 h8" stroke="#6e5c30" stroke-width="1.2"/></g>`},
+];
+const SPEC=[
+ {name:'None',draw:()=>'',behind:0},
+ {name:'Ink Smudge',behind:0,draw:()=>`<g transform="rotate(-14 336 306)"><ellipse cx="336" cy="306" rx="27" ry="13" fill="#241d15" opacity=".85"/></g><ellipse cx="300" cy="270" rx="9" ry="4.5" fill="#241d15" opacity=".6"/><circle cx="356" cy="322" r="4" fill="#241d15" opacity=".7"/>`},
+ {name:'Floating Formulae',behind:0,draw:(fg)=>`<g font-family="IBM Plex Mono, monospace" font-size="15" fill="${fg}" opacity=".75"><text x="66" y="140">E=mc&#178;</text><text x="366" y="182">&#8711;&#215;B</text><text x="62" y="330">&#955;&#8594;&#8734;</text><text x="356" y="346">&#8750;F&#183;ds</text></g>`},
+ {name:'Static Glitch',behind:0,draw:()=>`<rect x="16" y="176" width="480" height="7" fill="#4fd8e8" opacity=".35"/><rect x="30" y="186" width="452" height="4" fill="#e85a4f" opacity=".3"/><rect x="16" y="300" width="480" height="9" fill="#4fd8e8" opacity=".28"/><rect x="40" y="312" width="430" height="4" fill="#e85a4f" opacity=".3"/><rect x="16" y="404" width="480" height="6" fill="#ffffff" opacity=".22"/>`},
+ {name:'Halo of Diagrams',behind:0,draw:(fg)=>`<circle cx="256" cy="112" r="38" fill="none" stroke="${fg}" stroke-width="1.6" stroke-dasharray="7 5"/><ellipse cx="256" cy="112" rx="62" ry="15" fill="none" stroke="${fg}" stroke-width="1.3" opacity=".8"/><circle cx="318" cy="112" r="4" fill="${fg}"/><circle cx="230" cy="80" r="2.6" fill="${fg}"/>`},
+ {name:'Gold-Leaf Aura',behind:1,draw:()=>`<circle cx="256" cy="250" r="160" fill="#d4af37" opacity=".14"/><circle cx="256" cy="250" r="118" fill="#d4af37" opacity=".16"/><circle cx="256" cy="250" r="82" fill="#d4af37" opacity=".18"/><g fill="#d4af37" opacity=".8"><rect x="130" y="150" width="6" height="6" transform="rotate(20 133 153)"/><rect x="376" y="196" width="7" height="7" transform="rotate(-15 379 199)"/><rect x="110" y="330" width="5" height="5" transform="rotate(30 112 332)"/><rect x="390" y="330" width="6" height="6" transform="rotate(10 393 333)"/></g>`},
+];
+const CATS=[
+ {key:'bg',label:'Background',arr:BG},
+ {key:'base',label:'Base',arr:BASES},
+ {key:'cloth',label:'Clothing',arr:CLOTH},
+ {key:'expr',label:'Expression',arr:EXPR},
+ {key:'hair',label:'Hair',arr:HAIR},
+ {key:'eye',label:'Eyewear',arr:EYEWR},
+ {key:'head',label:'Headwear',arr:HEADW},
+ {key:'acc',label:'Accessory',arr:ACC},
+ {key:'spec',label:'Special',arr:SPEC},
+];
+
+/* ================= renderer ================= */
+function baseFx(b){
+ if(b.fx==='bronze') return `<path d="M210,178 Q240,158 282,166" stroke="#d8b878" stroke-width="4" fill="none" opacity=".7" stroke-linecap="round"/>`;
+ if(b.fx==='marble') return `<path d="M300,176 L288,206 L296,224 M208,268 L222,282" stroke="${b.shade}" stroke-width="1.4" fill="none"/>`;
+ if(b.fx==='graphite') return `<g stroke="${b.shade}" stroke-width="1.1" opacity=".5"><path d="M204,262 l16,-16 M212,272 l16,-16 M220,282 l16,-16 M292,266 l14,-14 M300,276 l14,-14"/></g>`;
+ if(b.fx==='cyber') return `<path d="M256,152 L256,208 M186,252 L206,252 M306,252 L326,252" stroke="${b.shade}" stroke-width="1.8" opacity=".8"/><rect x="288" y="258" width="22" height="14" rx="2" fill="none" stroke="${b.shade}" stroke-width="1.6"/><circle cx="200" cy="292" r="2.4" fill="${b.shade}"/><circle cx="312" cy="292" r="2.4" fill="${b.shade}"/>`;
+ return '';
+}
+function frame(fg,num){
+ return `<rect x="18" y="18" width="476" height="476" fill="none" stroke="${fg}" stroke-width="2.4"/>
+ <rect x="26" y="26" width="460" height="460" fill="none" stroke="${fg}" stroke-width=".8" opacity=".55"/>
+ <text x="34" y="47" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="2.2" fill="${fg}">MERGED PUBLIC &#8212; ARCHIVE</text>
+ <rect x="394" y="30" width="86" height="24" fill="none" stroke="${fg}" stroke-width="1.6"/>
+ <text x="437" y="47" font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="600" text-anchor="middle" letter-spacing="1" fill="${fg}">MP-${num}</text>
+ <text x="34" y="484" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.8" fill="${fg}" opacity=".8">CAT. PORTRAIT &#183; SERIES A</text>
+ <g fill="none" stroke="${fg}"><circle cx="446" cy="444" r="26" stroke-width="1.8"/><circle cx="446" cy="444" r="21" stroke-width="1" stroke-dasharray="2.5 3"/><circle cx="446" cy="444" r="15" stroke-width="1.2"/></g>
+ <text x="446" y="449" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="600" text-anchor="middle" fill="${fg}">MP</text>
+ <path d="M26,470 L486,470" stroke="${fg}" stroke-width="1" opacity=".4"/>`;
+}
+function render(cfg,num){
+ const bg=BG[cfg.bg], b=BASES[cfg.base];
+ let hairIdx=cfg.hair;
+ const hatOn = HEADW[cfg.head].name!=='None';
+ let hatFit=false;
+ if(hatOn && HAIR[hairIdx].tall){ hatFit=true; }
+ const hairT=HAIR[hairIdx];
+ const hair = hairT.draw ? (hatFit ? HAIR[1].draw(hairT.c) : hairT.draw(hairT.c)) : {back:'',front:''};
+ let s=`<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img">`;
+ s+=`<rect width="512" height="512" fill="${bg.fill}"/>`;
+ if(bg.grid){let g='';for(let i=48;i<512;i+=44){g+=`M${i},18 L${i},494 M18,${i} L494,${i} `;}s+=`<path d="${g}" stroke="#ffffff" stroke-width=".8" opacity=".12" fill="none"/>`;}
+ if(bg.bars){s+=`<g fill="#000"><rect x="50" y="84" width="190" height="26"/><rect x="290" y="140" width="160" height="22"/><rect x="70" y="330" width="150" height="22"/><rect x="270" y="392" width="180" height="26"/></g>`;}
+ const sp=SPEC[cfg.spec];
+ if(sp.behind) s+=sp.draw(bg.fg);
+ s+=hair.back;
+ s+=`<rect x="236" y="290" width="40" height="80" fill="${b.skin}"/><rect x="236" y="290" width="40" height="16" fill="${b.shade}" opacity=".55"/>`;
+ s+=CLOTH[cfg.cloth].draw();
+ s+=`<ellipse cx="185" cy="248" rx="11" ry="17" fill="${b.skin}" stroke="${b.shade}" stroke-width="1.4"/><ellipse cx="327" cy="248" rx="11" ry="17" fill="${b.skin}" stroke="${b.shade}" stroke-width="1.4"/>`;
+ s+=`<ellipse cx="256" cy="240" rx="72" ry="86" fill="${b.skin}" stroke="${b.shade}" stroke-width="1.6"/>`;
+ s+=baseFx(b);
+ s+=EXPR[cfg.expr].draw(b);
+ s+=hair.front;
+ s+=EYEWR[cfg.eye].draw();
+ s+=HEADW[cfg.head].draw();
+ s+=ACC[cfg.acc].draw();
+ if(!sp.behind) s+=sp.draw(bg.fg);
+ s+=frame(bg.fg,num);
+ s+=`</svg>`;
+ return s;
+}
+const pad=n=>String(n).padStart(4,'0');
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng=mulberry32(20260818);
+function pick(r,n){return Math.floor(r()*n)}
+function biased(r,n,noneP){return r()<noneP?0:1+pick(r,n-1)}
+function randomCfg(r){
+  return {bg:pick(r,BG.length),base:pick(r,BASES.length),cloth:pick(r,CLOTH.length),
+    expr:pick(r,EXPR.length),hair:pick(r,HAIR.length),
+    eye:biased(r,EYEWR.length,.38),head:biased(r,HEADW.length,.5),
+    acc:biased(r,ACC.length,.4),spec:biased(r,SPEC.length,.82)};
+}
+
+  /* ═══ CONFIG ═══════════════════════════════════════════════════════════
+     IMAGE_BASE: null → the plates render live from the trait system above.
+     When the HD 2048×2048 renders are ready, set IMAGE_BASE = "entities/"
+     and drop files named MP-0001.png … MP-0100.png into that folder; each
+     one fades in over its vector proof. Missing files keep the proof.   */
+  const IMAGE_BASE = null;
+  const FIRST = 1;   // first entity on this plate
+  const COUNT = 100; // entities per plate (plate 0001 shows the first 100 of 10,000)
+
+  /* MP-0001 — the canonical build from the Test Bench:
+     Archive Manila · Tone III · Tweed Blazer · Focused · Short Crop ·
+     Round Wire Frames · no headwear · Pencil Behind Ear · no special */
+  const MP1 = { bg: 0, base: 2, cloth: 0, expr: 2, hair: 1, eye: 1, head: 0, acc: 2, spec: 0 };
+
+  /* Exclusion rules R-02..R-06 from Trait Architecture Rev A — re-roll the
+     later layer, never the whole draw, so layer weights stay honest.
+     (R-01 hat-fit hair is applied inside render(); R-03's cybernetic
+     specials are not in this proof set.) */
+  function applyRules(cfg, r) {
+    while ((EYEWR[cfg.eye].name === "Safety Goggles" || EYEWR[cfg.eye].name === "Welding Goggles") &&
+           HEADW[cfg.head].name === "Green Eyeshade") cfg.eye = biased(r, EYEWR.length, 0.38);
+    while ((BASES[cfg.base].name === "Bronze Cast" || BASES[cfg.base].name === "Marble Cast") &&
+           SPEC[cfg.spec].name === "Static Glitch") cfg.spec = biased(r, SPEC.length, 0.82);
+    while (HEADW[cfg.head].name === "Laurel Wreath" &&
+           ACC[cfg.acc].name === "Pencil Behind Ear") cfg.acc = biased(r, ACC.length, 0.4);
+    while (BG[cfg.bg].name === "Redacted" &&
+           (EXPR[cfg.expr].name === "Grinning" || EXPR[cfg.expr].name === "Eureka")) cfg.expr = pick(r, EXPR.length);
+    return cfg;
+  }
+
+  const grid = document.getElementById("grid");
+  const frag = document.createDocumentFragment();
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (let i = 0; i < COUNT; i++) {
+    const num = FIRST + i;
+    const id = "MP-" + pad(num);
+    const fig = document.createElement("figure");
+    fig.className = "entity";
+    if (!reduce) fig.style.animationDelay = (i * 8) + "ms";
+    const frameEl = document.createElement("div");
+    frameEl.className = "frame";
+    const cfg = num === 1 ? MP1 : applyRules(randomCfg(rng), rng);
+    frameEl.innerHTML = render(cfg, pad(num));
+    if (IMAGE_BASE) {
+      const img = document.createElement("img");
+      img.alt = "Merged Public entity " + id;
+      img.loading = "lazy";
+      img.addEventListener("load", () => img.classList.add("loaded"));
+      img.src = IMAGE_BASE + id + ".png";
+      frameEl.appendChild(img);
+    }
+    const cap = document.createElement("figcaption");
+    cap.textContent = id;
+    fig.appendChild(frameEl);
+    fig.appendChild(cap);
+    frag.appendChild(fig);
+  }
+  grid.appendChild(frag);
+
+  /* ═══ traits & classifications — Trait Architecture Rev A ═══
+     Tiers: C ≥8% · U 4–7.9% · R 1.5–3.9% · E <1.5% · N = template absence */
+  const TIER_COLOR = { C: "var(--tier-c)", U: "var(--tier-u)", R: "var(--tier-r)", E: "var(--tier-e)" };
+  const LAYERS = [
+    ["L-00", "Background", [["Archive Manila","C"],["Ledger Cream","C"],["Slate Grey","C"],["Ink Wash","C"],["Blueprint Cyan","C"],["Oxide Red","C"],["Library Green","U"],["Carbon Black","U"],["Gilded Parchment","U"],["Vellum Rose","R"],["Microfiche Silver","R"],["Redacted","E"]]],
+    ["L-02", "Base", [["Portrait Tones I–VI","C"],["Bronze Cast","C"],["Marble Cast","U"],["Graphite Sketch","U"],["Cybernetic Chassis","U"]]],
+    ["L-03", "Clothing", [["Tweed Blazer","C"],["Oxford Shirt","C"],["Cardigan","C"],["Work Shirt","C"],["Turtleneck","U"],["Field Jacket","U"],["Sweater Vest","U"],["Lab Coat","U"],["Engineer Coveralls","U"],["Corduroy Suit","U"],["Denim Apron","U"],["Bow-Tie Suit","U"],["Dean's Robe","U"],["Flight Jacket","R"],["Rain Slicker","R"],["Surveyor's Vest","R"],["Archivist Smock","R"],["Ceremonial Regalia","R"],["Clean-Room Suit","E"],["Gilded Lab Coat","E"]]],
+    ["L-04", "Expression", [["Neutral Study","C"],["Slight Smile","C"],["Focused","C"],["Weary Scholar","C"],["Raised Brow","C"],["Grinning","C"],["Deadpan Stare","U"],["Eureka","R"]]],
+    ["L-05", "Hair", [["Short Crop","C"],["Side Part","C"],["Curly","C"],["Long Straight","C"],["Bun","C"],["Bald","C"],["Afro","U"],["Grey Professor","U"],["Braids","U"],["Ponytail","U"],["Wavy Bob","U"],["Slicked Back","U"],["Undercut","U"],["Buzz + Pencil Tuck","R"],["Einstein Shock","R"],["Ink-Dipped","E"]]],
+    ["L-06", "Eyewear", [["None","N"],["Round Wire Frames","C"],["Rectangular Frames","C"],["Reading Glasses","C"],["Horn-Rimmed","C"],["Safety Goggles","U"],["Pince-Nez","U"],["Monocle","R"],["Welding Goggles","R"],["AR Lens","E"]]],
+    ["L-07", "Headwear", [["None","N"],["Flat Cap","C"],["Beanie","C"],["Headphones","U"],["Beret","U"],["Hard Hat","U"],["Graduation Cap","U"],["Green Eyeshade","U"],["Wide-Brim Field Hat","U"],["Laurel Wreath","R"],["Gold-Tassel Mortarboard","R"],["Wired Thinking Cap","E"]]],
+    ["L-08", "Accessory", [["None","N"],["ID Badge","C"],["Pencil Behind Ear","C"],["Open Book","C"],["Slide Rule","U"],["Clipboard","U"],["Coffee Thermos","U"],["Rolled Blueprint","U"],["Magnifying Glass","U"],["Soldering Iron","U"],["Abacus","R"],["Antique Key","R"],["Archive Stamp","R"],["Golden Compass","E"]]],
+    ["L-09", "Special", [["None","N"],["Ink Smudge","U"],["Cybernetic Eye","U"],["Circuit Tattoo","U"],["Floating Formulae","R"],["Static Glitch","R"],["Halo of Diagrams","R"],["Gold-Leaf Aura","E"]]],
+  ];
+
+  const legendEl = document.getElementById("legend");
+  for (const [code, title, items] of LAYERS) {
+    const col = document.createElement("div");
+    col.className = "legend-col";
+    const h = document.createElement("h3");
+    h.textContent = title;
+    const lyr = document.createElement("span");
+    lyr.className = "lyr";
+    lyr.textContent = code;
+    h.appendChild(lyr);
+    col.appendChild(h);
+    const ul = document.createElement("ul");
+    for (const [name, tier] of items) {
+      const li = document.createElement("li");
+      const mark = document.createElement("i");
+      if (tier === "N") {
+        mark.className = "tick";
+      } else {
+        mark.className = "diamond";
+        mark.style.background = TIER_COLOR[tier];
+      }
+      li.appendChild(mark);
+      li.appendChild(document.createTextNode(name));
+      ul.appendChild(li);
+    }
+    col.appendChild(ul);
+    legendEl.appendChild(col);
+  }
+
+  /* ═══ legendary 1/1s — ten pieces outside the trait system ═══ */
+  const LEGENDS = [
+    ["The Founder", "Oil-portrait treatment, cracked varnish"],
+    ["The Archivist", "Buried in card catalogs, lamp-lit"],
+    ["The First Graduate", "Sepia photograph, hand-tinted"],
+    ["The Night Engineer", "Lit only by instrument glow"],
+    ["The Cartographer", "Face half-become a contour map"],
+    ["The Alchemist", "Marginalia crawling off the page"],
+    ["The Broadcast", "Rendered in scanlines and static"],
+    ["The Machinist", "Blueprint linework, white on cyan"],
+    ["The Librarian", "Gilded illuminated-manuscript frame"],
+    ["The Signal", "Portrait dissolving into waveform"],
+  ];
+  const legendsEl = document.getElementById("legends");
+  for (const [name, desc] of LEGENDS) {
+    const d = document.createElement("div");
+    d.className = "legend-piece";
+    const b = document.createElement("b");
+    const mark = document.createElement("i");
+    mark.className = "diamond";
+    b.appendChild(mark);
+    b.appendChild(document.createTextNode(name));
+    const s = document.createElement("span");
+    s.textContent = desc;
+    d.appendChild(b);
+    d.appendChild(s);
+    legendsEl.appendChild(d);
+  }
+</script>
+
+</body>
+</html>

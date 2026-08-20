@@ -1,0 +1,19 @@
+{
+  "name": "Merged Public — The Founder",
+  "description": "The first record. Oil-portrait treatment, cracked varnish, museum-gilt frame — the archive’s founding sitter.",
+  "image": "ipfs://__REVEAL_CID__/the-founder.png",
+  "attributes": [
+    {
+      "trait_type": "Class",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Legendary",
+      "value": "The Founder"
+    }
+  ]
+}
