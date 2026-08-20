@@ -42,8 +42,7 @@
   const BOARD_PENDING = "BOARD DEPLOYING — THE RECORD LANDS IN deployments/mp-board.robinhood.json";
 
   /* keccak256 topic0 for the three MergedPublicBoard events the board
-   * decodes (identical signatures to the audited board lineage).
-   * Recomputable with ethers.id("Funded(uint256,uint256)") etc. */
+   * decodes. Recomputable with ethers.id("Funded(uint256,uint256)") etc. */
   const TOPIC = {
     funded:    "0xa1dd612b9278fe0bb5d89ed1f642dc3678d0e558630c5a4a8df212ba2197cdb4", // Funded(uint256 indexed issueId, uint256 reward)
     settled:   "0x2c35d68fdf40b18e913bb877373b4a4fc67810e2546dc5c9f9208eb8494057cb", // Settled(uint256 indexed issueId, address indexed winner, uint256 reward)
@@ -184,7 +183,7 @@
   function classifyTransfer(item, board) {
     const from = low(item.from?.hash);
     const to = low(item.to?.hash);
-    const bb = board ? low(board) : " no-board"; // never matches when unset
+    const bb = board ? low(board) : "(no board)"; // never matches when unset
     if (from === low(ZERO)) return { kind: "MINT", cls: "st-done", text: `MINT → ${short(item.to?.hash)}` };
     if (to === bb) return { kind: "FUND", cls: "st-work", text: "FUND ESCROW → MP BOARD" };
     if (from === bb) return { kind: "WITHDRAW", cls: "st-open", text: `WITHDRAW → ${short(item.to?.hash)}` };
@@ -406,11 +405,11 @@
     renderAll();
   }
 
-  /* GitHub sweep: the archive repo's CI runs (the MP fleet works here), plus
-   * (once) the task mirror that gives bounties their human titles. */
+  /* GitHub sweep: the MP fleet workflow's runs (not every CI run — only the
+   * fleet), plus (once) the task mirror that gives bounties their titles. */
   async function githubTick() {
     try {
-      const runs = await github(`repos/${CFG.repo}/actions/runs?per_page=8`);
+      const runs = await github(`repos/${CFG.repo}/actions/workflows/mp-fleet.yml/runs?per_page=8`);
       state.runs = runs.workflow_runs || [];
       state.sources.github = "ok";
       state.githubTick = Date.now();
@@ -423,7 +422,7 @@
 
   async function loadTaskTitles() {
     try {
-      const file = await github(`repos/${CFG.repo}/contents/tasks.json`);
+      const file = await github(`repos/${CFG.repo}/contents/agents/tasks.json`);
       const bytes = Uint8Array.from(atob(file.content.replace(/\n/g, "")), (ch) => ch.charCodeAt(0));
       const doc = JSON.parse(new TextDecoder().decode(bytes));
       for (const task of doc.tasks || []) state.taskTitles.set(String(task.issueId), task.title);

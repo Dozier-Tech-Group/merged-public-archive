@@ -51,7 +51,7 @@ async function main() {
     deployer: deployer.address,
     deployTx: deployTx ? deployTx.hash : null,
     explorer: `https://robinhoodchain.blockscout.com/address/${address}`,
-    note: "MP-native work board: settlement and withdraw gated on holding a Merged Public identity. Payment for verified work, never for holding. Replaces the retired BAYOU-gated BountyBoard (see credits.json windDown).",
+    note: "MP-native work board: settlement and withdraw gated on holding a Merged Public identity. Payment for verified work, never for holding. Replaces the token-gated board MP's documents previously pointed at; see DECOUPLING.md.",
     deployedAt: new Date().toISOString(),
   };
   writeFileSync(RECORD_PATH, JSON.stringify(record, null, 2) + "\n");

@@ -31,5 +31,6 @@
       "unrevealed": "ipfs://QmRVfBB1CZXMZefiTKrQhRUpaKwe5P18X2mVLLo5x5rGR7",
       "collection": "ipfs://Qmf8rhe9iQFN7u4TnDJ3E9E7QGWTW14bBSiFBpQts5YT4C"
     }
-  }
+  },
+  "uriNote": "The top-level unrevealedURI and contractURI are the launch-time (2026-08-19) values and are HISTORICAL. The chain was repointed the next day to the raw IPFS CIDs under ipfs below, and reads from those; the original GitHub-raw mirrors are not depended on by any token and are expected to stop resolving as pre-move copies are retired."
 }

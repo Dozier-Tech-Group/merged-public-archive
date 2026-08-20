@@ -1,0 +1,35 @@
+name: CI
+
+# The repository's real test gate: the hardhat contract suites plus the vitest
+# board tests — exactly what `npm test` runs locally, nothing extra. It needs no
+# secrets and can write nothing, so a pull request from anywhere is safe to run.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Full install (not --ignore-scripts): hardhat's toolchain is what these
+      # tests exercise, and the lockfile is the pin.
+      - run: npm ci
+
+      - run: npm test

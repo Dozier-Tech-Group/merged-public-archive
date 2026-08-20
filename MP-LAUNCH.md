@@ -10,9 +10,11 @@
 > promise that pointed at it is superseded by the new board. In this runbook the
 > changes are small: the compliance citation now points at MP-VALUE.md §4, a funding
 > aside in §1 was removed from the historical record with a changelog line, §5
-> now states the collection's independence plainly, and a SECURITY.md link that
-> does not resolve in this repository was replaced by its substance inline.
-> Full record: [DECOUPLING.md](DECOUPLING.md).
+> now states the collection's independence plainly, and the §1 SECURITY.md
+> reference — dropped in that pass because the file did not yet resolve in this
+> repository — is **restored**, now that [SECURITY.md](SECURITY.md) exists here
+> and states the trust model, the contracts' hard limits, and the byte-sensitive
+> commitment files directly. Full record: [DECOUPLING.md](DECOUPLING.md).
 
 > **Status: LAUNCHED 2026-08-19.** `MergedPublic` is live at
 > [`0x5D000b230653E416FF41451525b144a6C2Ad7178`](https://robinhoodchain.blockscout.com/address/0x5D000b230653E416FF41451525b144a6C2Ad7178#code)
@@ -44,7 +46,9 @@ entries, not securities or legal instruments. No yield, no APY, no price promise
   (supplied by the owner 2026-08-18; default in `scripts/mint-mp.js` and the deploy
   script's royalty step). All 10,000 tokens mint to it and ERC-2981 royalties point at it.
   A Gnosis Safe on 4663 remains the long-term target;
-  an EOA treasury is acceptable at launch with a planned migration.
+  an EOA treasury is acceptable at launch with a planned migration — the single
+  owner key, the trusted operator/oracle role, and that migration are set out in
+  [SECURITY.md](SECURITY.md), with no date attached to it.
 - [ ] **Provenance final.** `generator/merged-public/provenance.json` exists and is
   byte-for-byte final. The deploy script hashes the exact raw file bytes with keccak256 and
   commits that hash immutably in the constructor. After deploy, the file must never be

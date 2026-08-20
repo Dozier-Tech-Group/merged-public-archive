@@ -12,10 +12,15 @@ const EXPLORER = {
   robinhoodTestnet: "https://explorer.testnet.chain.robinhood.com",
 };
 
+// Pre-reveal URI defaults, used by a fresh deploy (a testnet rehearsal) and
+// repointed to raw IPFS CIDs immediately afterward — see scripts/pin-mp.mjs.
+// The 2026-08-19 mainnet launch used the equivalent URLs in the repository MP
+// shipped from, before it moved here; mainnet has since been repointed to
+// ipfs:// and does not depend on either mirror.
 const DEFAULT_UNREVEALED_URI =
-  "https://raw.githubusercontent.com/Dozier-Tech-Group/silicon-bayou/master/metadata/mp/unrevealed.json";
+  "https://raw.githubusercontent.com/Dozier-Tech-Group/merged-public-archive/main/metadata/mp/unrevealed.json";
 const DEFAULT_CONTRACT_URI =
-  "https://raw.githubusercontent.com/Dozier-Tech-Group/silicon-bayou/master/metadata/mp/collection.json";
+  "https://raw.githubusercontent.com/Dozier-Tech-Group/merged-public-archive/main/metadata/mp/collection.json";
 
 // The passphrase is deliberate friction: chain 4663 is real ETH and a real
 // 10,000-token commitment. Type it on purpose, never bake it into .env defaults.

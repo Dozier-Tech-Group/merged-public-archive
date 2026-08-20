@@ -78,8 +78,8 @@ function stubFetch(url, opts = {}) {
   if (url.includes("/api/v2/tokens/") && url.includes("/transfers")) return respond(FIXTURES.transfers);
   if (url.includes(`/api/v2/tokens/${MC}`)) return respond({ holders_count: "1" });
   if (url.includes("/api/v2/tokens/0x5D000b")) return respond({ holders_count: "1" });
-  if (url.includes("actions/runs")) return respond(FIXTURES.runs);
-  if (url.includes("contents/tasks.json")) {
+  if (url.includes("actions/workflows/mp-fleet.yml/runs")) return respond(FIXTURES.runs);
+  if (url.includes("contents/agents/tasks.json")) {
     const b64 = Buffer.from(JSON.stringify(FIXTURES.tasks), "utf8").toString("base64");
     return respond({ content: b64, encoding: "base64" });
   }

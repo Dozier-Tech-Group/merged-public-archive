@@ -1,0 +1,118 @@
+name: MP fleet
+
+# The Merged Public fleet: a registered holder's agent works ONE funded bounty
+# per run, in the open, and opens a pull request.
+#
+# Safe by construction:
+#   - Dormant until the operator configures the ANTHROPIC_API_KEY secret. Agent
+#     compute is paid by the operator, so no key means no run — every step
+#     below the gate is skipped and the run is a clean no-op.
+#   - One task per run; turns are bounded inside agents/run-agent.mjs, so cost
+#     has a ceiling even when a task goes nowhere.
+#   - The runner stops before spending anything if the registry is empty, the
+#     named holder is not registered, no task is funded, or the board is not
+#     deployed (deployments/mp-board.robinhood.json absent = nothing is funded).
+#   - The runner runs `npm test` on the agent's work in THIS job and opens no
+#     pull request if it fails. GitHub does not fire pull_request workflows for
+#     pull requests opened with GITHUB_TOKEN, so ci.yml never runs on a fleet
+#     PR: the gate has to be here or it is nowhere.
+#   - Agents only OPEN pull requests. Humans review and merge. The operator —
+#     the board's owner and oracle, a trusted role — settles on-chain afterward.
+#     Merged Credits settle only when work merges: payment for verified work,
+#     never for holding.
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "issueId of the bounty to work (blank = next open funded task)"
+        required: false
+        type: string
+      agent:
+        description: "GitHub username of a registered holder (blank = first in the registry)"
+        required: false
+        type: string
+  schedule:
+    # Tuesdays 07:41 UTC — one bounded run a week, at a fixed off-peak minute.
+    # Deliberately not on the hour: GitHub queues every :00 cron at once and
+    # those runs are the ones that get delayed or dropped.
+    - cron: "41 7 * * 2"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# One fleet run at a time. Two agents racing the same bounty would spend twice
+# for one settlement; a queued run is cheaper than a duplicated one.
+concurrency:
+  group: mp-fleet
+  cancel-in-progress: false
+
+jobs:
+  fleet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Budget gate
+        id: gate
+        env:
+          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Whitespace is not a key: a secret set to " " is the same dormant
+          # state as one that was never set. The case is POSIX and never echoes
+          # the value. agents/run-agent.mjs applies the same rule.
+          case "$KEY" in
+            *[![:space:]]*) HAS_KEY=1 ;;
+            *) HAS_KEY=0 ;;
+          esac
+          if [ "$HAS_KEY" = "0" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "The MP fleet is DORMANT: the ANTHROPIC_API_KEY secret is not configured."
+            echo "Agent compute is paid by the operator, so with no key there is no run."
+            echo "Every later step is skipped. Nothing was checked out, nothing was changed."
+            echo "MP fleet dormant - ANTHROPIC_API_KEY is not configured, so no agent ran." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "Budget configured - the fleet may work one funded task."
+          fi
+
+      - name: Checkout
+        if: steps.gate.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # No token in .git/config. An agent with an API key is about to have
+          # write access to this working tree; a push-capable credential left
+          # lying in it is a credential the agent can read. The runner hands
+          # git the token from the environment at the push step, and only there.
+          persist-credentials: false
+
+      - name: Set up Node
+        if: steps.gate.outputs.enabled == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        if: steps.gate.outputs.enabled == 'true'
+        # Full install, matching ci.yml: the runner gates the agent's work on
+        # `npm test`, and hardhat's toolchain needs its install scripts to run.
+        run: npm ci
+
+      - name: Work one funded task
+        if: steps.gate.outputs.enabled == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Dispatch inputs reach node ONLY as env vars. They are never spliced
+          # into this shell line, where a crafted value would run as a command.
+          # The runner validates both shapes again before using either, and
+          # spawns every program it runs with an argv array and no shell, so no
+          # value from a repo file or an input reaches a shell there either.
+          MP_TASK: ${{ inputs.task }}
+          MP_AGENT: ${{ inputs.agent }}
+        run: |
+          git config user.name "mp-fleet[bot]"
+          git config user.email "mp-fleet@users.noreply.github.com"
+          node agents/run-agent.mjs
